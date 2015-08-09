@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 class BenqSerial(object):
     def __init__(self, device):
         self._ser = serial.serial_for_url(device, baudrate=115200, timeout=0.5)
-        # self.power = False
 
     def __del__(self):
         self._ser.close()
@@ -48,13 +47,13 @@ class BenqSerial(object):
     def audio_mute(self):
         return self._get_bool('mute')
 
-    def get_status(self):
-        self.source = self._get_generic('sour')
-        self.audo_volume = self._get_generic('vol')
-        self.audio_micvolume = self._get_generic('micvol')
+    @property
+    def audio_volume(self):
+        return self._get_answer('vol')
 
-    def __repr__(self):
-        return "%s" % self.__dict__
+    @property
+    def audio_micvolume(self):
+        return self._get_answer('micvol')
 
 
 if __name__ == '__main__':
@@ -62,8 +61,9 @@ if __name__ == '__main__':
 
     beamer = BenqSerial('/dev/ttyUSB0')
 
-    print 'beamer is on? %s' % beamer.power
-    print 'audio is muted? %s' % beamer.audio_mute
-    print 'selected source? %s' % beamer.source
-
-    # print beamer
+    print('beamer is on? %s' % beamer.power)
+    print('audio is muted? %s' % beamer.audio_mute)
+    print('audio volume? speaker: %s microphone: %s' % (
+        beamer.audio_volume, beamer.audio_micvolume
+    ))
+    print('selected source? %s' % beamer.source)
