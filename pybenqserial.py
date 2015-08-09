@@ -71,6 +71,10 @@ class BenqSerial(object):
     def audio_micvolume(self):
         return self._get_answer('micvol')
 
+    @property
+    def lamp_hours(self):
+        return self._get_answer('ltim')
+
 
 def run(argv):
 
@@ -89,6 +93,7 @@ def run(argv):
         beamer.audio_volume, beamer.audio_micvolume
     ))
     print('selected source? %s' % beamer.source)
+    print('lamp hours? %s' % beamer.lamp_hours)
 
 
 if __name__ == '__main__':
