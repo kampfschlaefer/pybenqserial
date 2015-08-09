@@ -17,6 +17,7 @@
 import serial
 import re
 import logging
+import argparse
 
 logger = logging.getLogger(__name__)
 
@@ -71,10 +72,16 @@ class BenqSerial(object):
         return self._get_answer('micvol')
 
 
-def run():
+def run(argv):
+
+    parser = argparse.ArgumentParser(description="control BenQ beamers via serial interface")
+    parser.add_argument('--device', '-d', type=str, default='/dev/ttyUSB0', help='serial device to open')
+
+    args = parser.parse_args(argv[1:])
+
     logging.basicConfig(level=logging.DEBUG)
 
-    beamer = BenqSerial('/dev/ttyUSB0')
+    beamer = BenqSerial(args.device)
 
     print('beamer is on? %s' % beamer.power)
     print('audio is muted? %s' % beamer.audio_mute)
@@ -85,4 +92,5 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    import sys
+    run(sys.argv)
